@@ -88,7 +88,7 @@ export const heldItemFilter: PokemonFilterType = {
     value: "",
     apply: (pokemon: Pokemon, value: string | number) => {
         const searchValue = String(value).toLowerCase();
-        return pokemon.items.some((i) => i.name.toLowerCase().includes(searchValue));
+        return pokemon.items.some(([i]) => i.name.toLowerCase().includes(searchValue));
     },
     inputMethod: "select",
     inputValues: Object.values(TectonicData.items).map((i) => i.name),

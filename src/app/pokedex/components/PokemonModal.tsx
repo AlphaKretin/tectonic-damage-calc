@@ -6,6 +6,7 @@ import { negativeMod } from "@/app/data/util";
 import AbilityCapsule from "@/components/AbilityCapsule";
 import BasicButton from "@/components/BasicButton";
 import CloseXButton from "@/components/CloseXButton";
+import ImageFallback from "@/components/ImageFallback";
 import LeftRightCycleButtons from "@/components/LeftRightCycleButtons";
 import TribeCapsule from "@/components/TribeCapsule";
 import TypeBadge, { TypeBadgeElementEnum } from "@/components/TypeBadge";
@@ -369,9 +370,44 @@ const PokemonModal: React.FC<PokemonModalProps> = ({ pokemon: mon, handlePokemon
                             </div>
                             <hr className="my-3" />
                             <h1 className="font-semibold text-2xl text-center mb-2 text-gray-800 dark:text-gray-100">
-                                Encounters
+                                Locations
                             </h1>
                             <EncounterDisplay pokemon={currentPokemon} />
+                            <h1 className="font-semibold mt-3 text-2xl text-center mb-2 text-gray-800 dark:text-gray-100">
+                                Wild Held Items
+                            </h1>
+                            <table className="table-fixed w-full text-center">
+                                <thead>
+                                    <tr>
+                                        <th className={"border w-25 py-2 bg-white dark:bg-gray-700"}>Item</th>
+                                        <th className={"border w-20 py-2 bg-white dark:bg-gray-700"}>Chance</th>
+                                        <th className={"border py-2 bg-white dark:bg-gray-700"}>Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {currentPokemon.items.map(([i, chance], index) => (
+                                        <tr key={index}>
+                                            <td className={"border p-2 bg-white dark:bg-violet-400/40 font-semibold"}>
+                                                <div>
+                                                    <span className="flex justify-center">
+                                                        <ImageFallback
+                                                            alt={i.name}
+                                                            src={i.image}
+                                                            width={50}
+                                                            height={50}
+                                                        />
+                                                    </span>
+                                                    {i.name}
+                                                </div>
+                                            </td>
+                                            <td className={"border bg-white dark:bg-violet-400/40"}>{`${chance}%`}</td>
+                                            <td className={"border px-2 bg-white dark:bg-violet-400/40"}>
+                                                {i.description}
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
                         </TabContent>
                         <TabContent tab="Level Moves" activeTab={activeTab}>
                             <MoveTable moves={currentPokemon.getLevelMoves(currentForm)} showLevel={true} />

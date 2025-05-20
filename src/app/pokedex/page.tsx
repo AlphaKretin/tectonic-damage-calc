@@ -41,7 +41,7 @@ const tabNames = ["Pokemon", "Moves", "Abilities", "Items", "Tribes", "Type Char
 
 const itemMons: Record<string, Array<Pokemon>> = {};
 Object.values(TectonicData.pokemon).forEach((x) =>
-    x.items.forEach((i) => {
+    x.items.forEach(([i]) => {
         if (!(i.id in itemMons)) {
             itemMons[i.id] = [];
         }
@@ -53,7 +53,15 @@ const itemDisplayData = Object.values(TectonicData.items)
     .map((i) => {
         return {
             item: i,
-            wildMons: i.id in itemMons ? uniq(itemMons[i.id]) : [],
+            wildMons:
+                i.id in itemMons
+                    ? uniq(itemMons[i.id]).map((p) => {
+                          return {
+                              mon: p,
+                              chance: p.items.find(([x]) => x == i)?.[1] ?? 0,
+                          };
+                      })
+                    : [],
             moveData: i.isTM && i.move ? TectonicData.moves[i.move] : undefined,
         };
     })
@@ -296,7 +304,7 @@ const Home: NextPage = () => {
                                             </TableCell>
                                             <TableCell>
                                                 <div className="w-50 whitespace-break-spaces">
-                                                    {i.wildMons.map((x) => x.name).join(", ")}
+                                                    {i.wildMons.map((x) => `${x.mon.name} - ${x.chance}%`).join("\n")}
                                                 </div>
                                             </TableCell>
                                             <TableCell>{i.item.description}</TableCell>

@@ -40,6 +40,16 @@ export class PokemonEvolutionTerms {
     }
 }
 
+export class LoadedWildHeldItem {
+    item: string;
+    chance: number;
+
+    constructor(item: string, chance: number) {
+        this.item = item;
+        this.chance = chance;
+    }
+}
+
 export class LoadedPokemonLevelMove {
     level: number;
     move: string;
@@ -170,6 +180,10 @@ export class LoadedItem extends LoadedData<LoadedItem> {
 }
 
 export class LoadedPokemon extends LoadedData<LoadedPokemon> {
+    static WILD_ITEM_CHANCE_COMMON = 35;
+    static WILD_ITEM_CHANCE_UNCOMMON = 10;
+    static WILD_ITEM_CHANCE_RARE = 2;
+
     static formMoves: Record<string, (string | undefined)[]> = {
         ROTOM: [undefined, "OVERHEAT", "HYDROPUMP", "BLIZZARD", "AIRSLASH", "LEAFSTORM"],
         URSHIFU: ["WICKEDBLOW", "SURGINGSTRIKES"],
@@ -197,7 +211,7 @@ export class LoadedPokemon extends LoadedData<LoadedPokemon> {
     tutorMoves: string[] = [];
     formSpecificMoves: (string | undefined)[] = [];
     tribes: string[] = [];
-    wildItems: string[] = [];
+    wildItems: LoadedWildHeldItem[] = [];
     kind: string = "";
     pokedex: string = "";
     evolutions: PokemonEvolutionTerms[] = [];
@@ -239,9 +253,12 @@ export class LoadedPokemon extends LoadedData<LoadedPokemon> {
         this.populateMap["LineMoves"] = (_, self, value) => (self.lineMoves = value.split(","));
         this.populateMap["TutorMoves"] = (_, self, value) => (self.tutorMoves = value.split(","));
         this.populateMap["Tribes"] = (_, self, value) => (self.tribes = value.split(","));
-        this.populateMap["WildItemCommon"] = (_, self, value) => self.wildItems.push(value);
-        this.populateMap["WildItemUncommon"] = (_, self, value) => self.wildItems.push(value);
-        this.populateMap["WildItemRare"] = (_, self, value) => self.wildItems.push(value);
+        this.populateMap["WildItemCommon"] = (_, self, value) =>
+            self.wildItems.push(new LoadedWildHeldItem(value, LoadedPokemon.WILD_ITEM_CHANCE_COMMON));
+        this.populateMap["WildItemUncommon"] = (_, self, value) =>
+            self.wildItems.push(new LoadedWildHeldItem(value, LoadedPokemon.WILD_ITEM_CHANCE_UNCOMMON));
+        this.populateMap["WildItemRare"] = (_, self, value) =>
+            self.wildItems.push(new LoadedWildHeldItem(value, LoadedPokemon.WILD_ITEM_CHANCE_RARE));
         this.populateMap["Kind"] = (_, self, value) => (self.kind = value);
         this.populateMap["Pokedex"] = (_, self, value) => (self.pokedex = value);
         this.populateMap["Evolutions"] = (_, self, value) => {

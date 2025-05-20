@@ -85,7 +85,7 @@ export class Pokemon {
     kind: string = "";
     pokedex: string = "";
     forms: Pokemon[] = [];
-    items: Item[] = [];
+    items: [Item, number][] = [];
     evolutionTree: NTreeNode<PokemonEvolutionTerms> = null!;
 
     static NULL: Pokemon = null!;
@@ -116,7 +116,7 @@ export class Pokemon {
         this.weight = loaded.weight;
         this.kind = loaded.kind;
         this.pokedex = loaded.pokedex;
-        this.items = loaded.wildItems.map((i) => TectonicData.items[i]);
+        this.items = loaded.wildItems.map((i) => [TectonicData.items[i.item], i.chance]);
         this.evolutionTree = NTreeArrayNode.buildTree(loaded.evolutionTreeArray!);
     }
 
